@@ -7,6 +7,7 @@ const DEVICES = {
 
 const REMOTE_BASE_URL = 'http://toyama.5374.jp';
 const AREA_NAME = '藤ノ木';
+const IGNORE_BY_REMARK = ['*1', '*2'];
 
 function notify(message) {
   if (!message) {
@@ -72,10 +73,16 @@ const fetchAreaTask = fetch(`${REMOTE_BASE_URL}/data/area_days.csv`)
 
 const moment = require('moment');
 
+function includesIgnore(dayCell) {
+  return IGNORE_BY_REMARK.find(remark => dayCell.includes(remark));
+}
+
 function convertNotifyData(areas) {
   const now = moment();
   const tomorrow = now.clone().add(1, 'day');
-  return areas.filter(area => area.mostRecent && moment(area.mostRecent).isBetween(now, tomorrow));
+  return areas.filter(area => !includesIgnore(area.dayCell)
+    && area.mostRecent
+    && moment(area.mostRecent).isBetween(now, tomorrow));
 }
 
 fetchAreaTask
