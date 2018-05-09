@@ -9,7 +9,13 @@ const REMOTE_BASE_URL = 'http://toyama.5374.jp';
 const AREA_NAME = '藤ノ木';
 const IGNORE_BY_REMARK = ['*1', '*2'];
 
+// if process.env.IGNORE_NOTIFY is 1, not notify to google home.
+
 function notify(message) {
+  if (process.env.IGNORE_NOTIFY) {
+    return;
+  }
+
   if (!message) {
     console.log('not trash day.');
     return;
@@ -90,5 +96,5 @@ fetchAreaTask
   .then((values) => { console.log(JSON.stringify(values, null, '  ')); return values; })
   .then(values => convertNotifyData(values))
   .then(values => (values.length > 0 ? `明日は${values.map(area => area.label).join('と')}の日ですか？` : null))
-  .then(message => console.log(message));
-// .then(message => notify(message));
+  .then((message) => { console.log(message); return message; })
+  .then(message => notify(message));
