@@ -5,10 +5,9 @@ const MAX_MONTH = 2;
 const dayEnum = ['日', '月', '火', '水', '木', '金', '土'];
 
 class AreaModel {
-  constructor(label, centerName, center, trash) {
+  constructor(label, centerName, trash) {
     this.label = label;
     this.centerName = centerName;
-    this.center = center;
     this.trash = trash;
   }
 

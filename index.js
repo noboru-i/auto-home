@@ -54,7 +54,6 @@ function mapArea(data) {
     const area = new AreaModel(
       d[0],
       d[1],
-      '',
       trashLabels.map((label, i) => new TrashModel(trashLabels[i], d[i + 2])),
     );
     return area;
