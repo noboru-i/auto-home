@@ -69,13 +69,5 @@ class TrashModel {
   }
 }
 
-class RemarkModel {
-  constructor(id, text) {
-    this.id = id;
-    this.text = text;
-  }
-}
-
 exports.AreaModel = AreaModel;
 exports.TrashModel = TrashModel;
-exports.RemarkModel = RemarkModel;
