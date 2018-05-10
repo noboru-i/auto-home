@@ -5,16 +5,10 @@ const MAX_MONTH = 2;
 const dayEnum = ['日', '月', '火', '水', '木', '金', '土'];
 
 class AreaModel {
-  constructor(label, centerName, trash) {
+  constructor(label, centerName, trashList) {
     this.label = label;
     this.centerName = centerName;
-    this.trash = trash;
-  }
-
-  calcMostRect() {
-    for (let i = 0; i < this.trash.length; i++) {
-      this.trash[i].calcMostRect();
-    }
+    this.trashList = trashList;
   }
 }
 
@@ -24,11 +18,15 @@ class TrashModel {
     this.dayCell = cell.split(' ').filter(c => c.length > 0);
   }
 
-  calcMostRect() {
+  getMostRecent() {
+    if (this.mostRecent) {
+      return this.mostRecent;
+    }
+
     const dayList = [];
     const today = moment();
 
-    for (let i = 0; i < MAX_MONTH; i++) {
+    for (let i = 0; i < MAX_MONTH; i += 1) {
       const curYear = today.year();
       const month = today.clone().add(i, 'month').month();
 
@@ -65,6 +63,8 @@ class TrashModel {
     const target = moment();
     this.mostRecent = dayList.find(day => target.isBefore(day));
     this.dayList = dayList;
+
+    return this.mostRecent;
   }
 }
 

@@ -67,11 +67,6 @@ function mapArea(data) {
   });
 }
 
-function sort(area) {
-  area.calcMostRect();
-  return area.trash;
-}
-
 const fetchAreaTask = fetch(`${REMOTE_BASE_URL}/data/area_days.csv`)
   .then(rawData => parseCsv(rawData))
   .then(data => mapArea(data))
@@ -83,18 +78,16 @@ function includesIgnore(dayCell) {
   return IGNORE_BY_REMARK.find(remark => dayCell.includes(remark));
 }
 
-function convertNotifyData(areas) {
+function convertNotifyData(area) {
   const now = moment();
   const tomorrow = now.clone().add(1, 'day');
-  return areas.filter(area => !includesIgnore(area.dayCell)
-    && area.mostRecent
-    && moment(area.mostRecent).isBetween(now, tomorrow));
+  return area.trashList.filter(trash => !includesIgnore(trash.dayCell)
+    && trash.getMostRecent()
+    && moment(trash.getMostRecent()).isBetween(now, tomorrow));
 }
 
 fetchAreaTask
-  .then(values => sort(values))
-  .then((values) => { console.log(JSON.stringify(values, null, '  ')); return values; })
-  .then(values => convertNotifyData(values))
+  .then(area => convertNotifyData(area))
   .then(values => (values.length > 0 ? `明日は${values.map(area => area.label).join('と')}の日ですか？` : null))
   .then((message) => { console.log(message); return message; })
   .then(message => notify(message));
